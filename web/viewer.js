@@ -147,6 +147,16 @@ var PDFView = {
       passwordCancel: document.getElementById('passwordCancel')
     });
 
+    PresentationMode.initialize({
+      container: container,
+      menu: document.getElementById('presentationModeMenu'),
+      cancelButton: document.getElementById('presentationModeCancel'),
+      firstPage: document.getElementById('presentationModeFirstPage'),
+      lastPage: document.getElementById('presentationModeLastPage'),
+      pageRotateCw: document.getElementById('presentationModePageRotateCw'),
+      pageRotateCcw: document.getElementById('presentationModePageRotateCcw')
+    });
+
     this.initialized = true;
     container.addEventListener('scroll', function() {
       self.lastScroll = Date.now();
@@ -1646,18 +1656,6 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
   document.getElementById('download').addEventListener('click',
     SecondaryToolbar.downloadClick.bind(SecondaryToolbar));
 
-  document.getElementById('contextFirstPage').addEventListener('click',
-    SecondaryToolbar.firstPageClick.bind(SecondaryToolbar));
-
-  document.getElementById('contextLastPage').addEventListener('click',
-    SecondaryToolbar.lastPageClick.bind(SecondaryToolbar));
-
-  document.getElementById('contextPageRotateCw').addEventListener('click',
-    SecondaryToolbar.pageRotateCwClick.bind(SecondaryToolbar));
-
-  document.getElementById('contextPageRotateCcw').addEventListener('click',
-    SecondaryToolbar.pageRotateCcwClick.bind(SecondaryToolbar));
-
 //#if (FIREFOX || MOZCENTRAL)
 //PDFView.setTitleUsingUrl(file);
 //PDFView.initPassiveLoading();
@@ -1859,10 +1857,17 @@ window.addEventListener('pagechange', function pagechange(evt) {
       if (page <= first || page >= last)
         scrollIntoView(thumbnail);
     }
-
   }
+  var numPages = PDFView.pages.length;
   document.getElementById('previous').disabled = (page <= 1);
-  document.getElementById('next').disabled = (page >= PDFView.pages.length);
+  document.getElementById('next').disabled = (page >= numPages);
+
+  document.getElementById('firstPage').disabled = (page <= 1);
+  document.getElementById('lastPage').disabled = (page >= numPages);
+
+  document.getElementById('presentationModeFirstPage').disabled = (page <= 1);
+  document.getElementById('presentationModeLastPage').disabled =
+    (page >= numPages);
 }, true);
 
 // Firefox specific event, so that we can prevent browser from zooming
@@ -1892,7 +1897,7 @@ window.addEventListener('click', function click(evt) {
 }, false);
 
 window.addEventListener('keydown', function keydown(evt) {
-  if (PasswordPrompt.visible) {
+  if (PasswordPrompt.visible || PresentationMode.menuVisible) {
     return;
   }
 

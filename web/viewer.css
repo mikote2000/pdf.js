@@ -389,14 +389,19 @@ html[dir='rtl'] .findbar {
   height: auto;
   z-index: 30000;
 }
-html[dir='ltr'] .secondaryToolbar {
+html[dir='ltr'] #secondaryToolbar {
   right: 4px;
 }
-html[dir='rtl'] .secondaryToolbar {
+html[dir='rtl'] #secondaryToolbar {
   left: 4px;
 }
 
-#secondaryToolbarButtonContainer {
+#presentationModeMenu {
+  position: fixed;
+  overflow: auto;
+}
+
+.buttonContainer {
   max-width: 200px;
   max-height: 400px;
   overflow-y: auto;
@@ -980,6 +985,11 @@ html[dir="rtl"] .secondaryToolbarButton > span {
   content: url(images/secondaryToolbarButton-rotateCw.png);
 }
 
+/* Buttons that only exist in the presentation mode menu. */
+.secondaryToolbarButton.presentationModeCancel::before {
+  content: url(images/presentationMode-cancel.png);
+}
+
 .verticalToolbarSeparator {
   display: block;
   padding: 8px 0;
@@ -996,7 +1006,7 @@ html[dir='rtl'] .verticalToolbarSeparator {
 }
 
 .horizontalToolbarSeparator {
-  display: block; 
+  display: block;
   margin: 0 0 4px 0;
   height: 1px;
   width: 100%;
@@ -1501,7 +1511,7 @@ canvas {
   }
 
   /* Rules for browsers that don't support mozPrintCallback. */
-  #sidebarContainer, #secondaryToolbar, .toolbar, #loadingBox, #errorWrapper, .textLayer {
+  #sidebarContainer, .secondaryToolbar, .toolbar, #loadingBox, #errorWrapper, .textLayer {
     display: none;
   }
   #viewerContainer {

@@ -120,7 +120,7 @@ limitations under the License.
         </div>  <!-- findbar -->
 
         <div id="secondaryToolbar" class="secondaryToolbar hidden doorHangerRight">
-          <div id="secondaryToolbarButtonContainer">
+          <div class="buttonContainer">
             <button id="secondaryPresentationMode" class="secondaryToolbarButton presentationMode visibleLargeView" title="Switch to Presentation Mode" tabindex="18" data-l10n-id="presentation_mode">
               <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
             </button>
@@ -251,23 +251,38 @@ limitations under the License.
           </div>
         </div>
 
-        <menu type="context" id="viewerContextMenu">
-          <menuitem id="contextFirstPage" label="First Page"
-                    data-l10n-id="first_page"></menuitem>
-          <menuitem id="contextLastPage" label="Last Page"
-                    data-l10n-id="last_page"></menuitem>
-          <menuitem id="contextPageRotateCw" label="Rotate Clockwise"
-                    data-l10n-id="page_rotate_cw"></menuitem>
-          <menuitem id="contextPageRotateCcw" label="Rotate Counter-Clockwise"
-                    data-l10n-id="page_rotate_ccw"></menuitem>
-        </menu>
-
 <!--#if (FIREFOX || MOZCENTRAL) -->
 <!--    <div id="viewerContainer"> -->
 <!--#else -->
         <div id="viewerContainer" tabindex="0">
 <!--#endif -->
           <div id="viewer"></div>
+
+          <div id="presentationModeMenu" class="secondaryToolbar hidden doorHanger">
+            <div class="buttonContainer">
+              <button id="presentationModeCancel" class="secondaryToolbarButton presentationModeCancel" title="Leave Presentation Mode" tabindex="" data-l10n-id="presentation_mode_cancel">
+                <span data-l10n-id="presentation_mode_cancel_label">Leave Presentation Mode</span>
+              </button>
+
+              <div class="horizontalToolbarSeparator"></div>
+
+              <button id="presentationModeFirstPage" class="secondaryToolbarButton firstPage" title="Go to First Page" tabindex="" data-l10n-id="first_page">
+                <span data-l10n-id="first_page_label">Go to First Page</span>
+              </button>
+              <button id="presentationModeLastPage" class="secondaryToolbarButton lastPage" title="Go to Last Page" tabindex="" data-l10n-id="last_page">
+                <span data-l10n-id="last_page_label">Go to Last Page</span>
+              </button>
+
+              <div class="horizontalToolbarSeparator"></div>
+
+              <button id="presentationModePageRotateCw" class="secondaryToolbarButton rotateCw" title="Rotate Clockwise" tabindex="" data-l10n-id="page_rotate_cw">
+                <span data-l10n-id="page_rotate_cw_label">Rotate Clockwise</span>
+              </button>
+              <button id="presentationModePageRotateCcw" class="secondaryToolbarButton rotateCcw" title="Rotate Counterclockwise" tabindex="" data-l10n-id="page_rotate_ccw">
+                <span data-l10n-id="page_rotate_ccw_label">Rotate Counterclockwise</span>
+              </button>
+            </div>
+          </div> <!-- presentationModeMenu -->
         </div>
 
         <div id="errorWrapper" hidden='true'>
