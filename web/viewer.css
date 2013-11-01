@@ -392,18 +392,30 @@ html[dir='rtl'] .findbar {
   height: auto;
   z-index: 30000;
 }
-html[dir='ltr'] .secondaryToolbar {
+html[dir='ltr'] #secondaryToolbar {
   right: 4px;
 }
-html[dir='rtl'] .secondaryToolbar {
+html[dir='rtl'] #secondaryToolbar {
   left: 4px;
 }
+html[dir='ltr'] #bookmarkBar {
+  right: 45px;
+}
+html[dir='rtl'] #bookmarkBar {
+  left: 45px;
+}
 
-#secondaryToolbarButtonContainer {
+.buttonContainer {
   max-width: 200px;
   max-height: 400px;
   overflow-y: auto;
   margin-bottom: -4px;
+}
+#bookmarkBar .buttonContainer {
+  max-width: 300px;
+}
+#bookmarkBar > .buttonContainer > * {
+ display: block;
 }
 
 .doorHanger,
@@ -898,23 +910,10 @@ html[dir="rtl"] .secondaryToolbarButton.print::before {
   content: url(images/toolbarButton-download.png);
 }
 
-.toolbarButton.bookmark,
-.secondaryToolbarButton.bookmark {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  padding-top: 4px;
-  text-decoration: none;
-}
-.secondaryToolbarButton.bookmark {
-  padding-top: 5px;
-}
-
 .bookmark[href='#'] {
   opacity: .5;
   pointer-events: none;
 }
-
 .toolbarButton.bookmark::before,
 .secondaryToolbarButton.bookmark::before {
   content: url(images/toolbarButton-bookmark.png);
@@ -953,10 +952,18 @@ html[dir="rtl"] .secondaryToolbarButton {
   padding-right: 24px;
   text-align: right;
 }
-html[dir="ltr"] .secondaryToolbarButton.bookmark {
+
+a.secondaryToolbarButton {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-top: 5px;
+  text-decoration: none;
+}
+html[dir='ltr'] a.secondaryToolbarButton {
   padding-left: 27px;
 }
-html[dir="rtl"] .secondaryToolbarButton.bookmark {
+html[dir='rtl'] a.secondaryToolbarButton {
   padding-right: 27px;
 }
 
@@ -1039,10 +1046,15 @@ html[dir='rtl'] .verticalToolbarSeparator {
   width: 40px;
 }
 
+.toolbarField.bookmark {
+  margin: 0 0 4px 0;
+  width: 286px;
+}
+
 .toolbarField.pageNumber::-webkit-inner-spin-button,
 .toolbarField.pageNumber::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .toolbarField:hover {
@@ -1068,6 +1080,19 @@ html[dir='rtl'] .verticalToolbarSeparator {
   -webkit-user-select: none;
   -moz-user-select: none;
   cursor: default;
+}
+
+.toolbarLabel.bookmark {
+  margin: 0;
+  padding-top: 0;
+}
+html[dir='ltr'] .toolbarLabel.bookmark {
+  text-align: left;
+  padding-left: 0;
+}
+html[dir='rtl'] .toolbarLabel.bookmark {
+  text-align: right;
+  padding-right: 0;
 }
 
 #thumbnailView {
@@ -1509,7 +1534,7 @@ canvas {
   }
 
   /* Rules for browsers that don't support mozPrintCallback. */
-  #sidebarContainer, #secondaryToolbar, .toolbar, #loadingBox, #errorWrapper, .textLayer {
+  #sidebarContainer, .secondaryToolbar, .toolbar, #loadingBox, #errorWrapper, .textLayer {
     display: none;
   }
   #viewerContainer {

@@ -18,7 +18,7 @@
            PDFFindController, ProgressBar, TextLayerBuilder, DownloadManager,
            getFileName, getOutputScale, scrollIntoView, getPDFFileNameFromURL,
            PDFHistory, Settings, PageView, ThumbnailView, noContextMenuHandler,
-           SecondaryToolbar, PasswordPrompt, PresentationMode */
+           SecondaryToolbar, BookmarkBar, PasswordPrompt, PresentationMode */
 
 'use strict';
 
@@ -82,6 +82,7 @@ var currentPageNumber = 1;
 //#include pdf_find_controller.js
 //#include pdf_history.js
 //#include secondary_toolbar.js
+//#include bookmark_bar.js
 //#include password_prompt.js
 //#include presentation_mode.js
 
@@ -149,6 +150,14 @@ var PDFView = {
       lastPage: document.getElementById('lastPage'),
       pageRotateCw: document.getElementById('pageRotateCw'),
       pageRotateCcw: document.getElementById('pageRotateCcw')
+    });
+
+    BookmarkBar.initialize({
+      bar: document.getElementById('bookmarkBar'),
+      toggleButton: document.getElementById('bookmarkBarToggle'),
+      copyField: document.getElementById('bookmarkCopy'),
+      openButton: document.getElementById('bookmarkOpen'),
+      secondaryOpenButton: document.getElementById('secondaryBookmarkOpen')
     });
 
     PasswordPrompt.initialize({
@@ -678,7 +687,7 @@ var PDFView = {
    */
   getAnchorUrl: function getAnchorUrl(anchor) {
 //#if (GENERIC || B2G)
-    return anchor;
+    return (document.URL.split('#')[0] + anchor);
 //#endif
 //#if (FIREFOX || MOZCENTRAL)
 //  return this.url.split('#')[0] + anchor;
@@ -1764,9 +1773,7 @@ function updateViewarea() {
     store.set('scrollLeft', Math.round(topLeft[0]));
     store.set('scrollTop', Math.round(topLeft[1]));
   });
-  var href = PDFView.getAnchorUrl(pdfOpenParams);
-  document.getElementById('viewBookmark').href = href;
-  document.getElementById('secondaryViewBookmark').href = href;
+  BookmarkBar.updateUrl(PDFView.getAnchorUrl(pdfOpenParams));
 
   // Update the current bookmark in the browsing history.
   PDFHistory.updateCurrentBookmark(pdfOpenParams, pageNumber);
@@ -1783,6 +1790,9 @@ window.addEventListener('resize', function webViewerResize(evt) {
 
   // Set the 'max-height' CSS property of the secondary toolbar.
   SecondaryToolbar.setMaxHeight(PDFView.container);
+
+  // Force the bookmark bar closed when the toggle button is no longer visible.
+  BookmarkBar.hide();
 });
 
 window.addEventListener('hashchange', function webViewerHashchange(evt) {
@@ -1809,9 +1819,10 @@ window.addEventListener('change', function webViewerChange(evt) {
   PDFView.setTitleUsingUrl(file.name);
 
   // URL does not reflect proper document location - hiding some icons.
-  document.getElementById('viewBookmark').setAttribute('hidden', 'true');
-  document.getElementById('secondaryViewBookmark').
+  document.getElementById('bookmarkBarToggle').setAttribute('hidden', 'true');
+  document.getElementById('secondaryBookmarkOpen').
     setAttribute('hidden', 'true');
+  BookmarkBar.close();
   document.getElementById('download').setAttribute('hidden', 'true');
   document.getElementById('secondaryDownload').setAttribute('hidden', 'true');
 }, true);
@@ -1922,6 +1933,9 @@ window.addEventListener('click', function click(evt) {
   if (!PresentationMode.active) {
     if (SecondaryToolbar.opened && PDFView.container.contains(evt.target)) {
       SecondaryToolbar.close();
+    }
+    if (BookmarkBar.opened && PDFView.container.contains(evt.target)) {
+      BookmarkBar.close();
     }
   } else if (evt.button === 0) {
     // Necessary since preventDefault() in 'mousedown' won't stop
@@ -2046,6 +2060,10 @@ window.addEventListener('keydown', function keydown(evt) {
       case 27: // esc key
         if (SecondaryToolbar.opened) {
           SecondaryToolbar.close();
+          handled = true;
+        }
+        if (BookmarkBar.opened) {
+          BookmarkBar.close();
           handled = true;
         }
         if (!PDFView.supportsIntegratedFind && PDFFindBar.opened) {
