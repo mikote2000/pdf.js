@@ -217,51 +217,42 @@ var PageView = function pageView(container, id, scale,
       }
     }
 
-    function bindNamedAction(link, action) {
-      link.href = PDFView.getAnchorUrl('');
-      link.onclick = function pageViewSetupNamedActionOnClick() {
+    function bindNamedAction(div, action) {
+      div.onclick = function pageViewSetupNamedActionOnClick() {
         // See PDF reference, table 8.45 - Named action
         switch (action) {
           case 'GoToPage':
-            document.getElementById('pageNumber').focus();
+            document.getElementById('pageNumber').select();
             break;
-
           case 'GoBack':
             PDFHistory.back();
             break;
-
           case 'GoForward':
             PDFHistory.forward();
             break;
-
           case 'Find':
             if (!PDFView.supportsIntegratedFind) {
               PDFFindBar.toggle();
             }
             break;
-
-          case 'NextPage':
-            PDFView.page++;
-            break;
-
           case 'PrevPage':
             PDFView.page--;
             break;
-
-          case 'LastPage':
-            PDFView.page = PDFView.pages.length;
+          case 'NextPage':
+            PDFView.page++;
             break;
-
           case 'FirstPage':
             PDFView.page = 1;
             break;
-
+          case 'LastPage':
+            PDFView.page = PDFView.pages.length;
+            break;
           default:
             break; // No action according to spec
         }
         return false;
       };
-      link.className = 'internalLink';
+      div.className = 'namedAction';
     }
 
     pdfPage.getAnnotations().then(function(annotationsData) {

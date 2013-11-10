@@ -1244,14 +1244,18 @@ canvas {
   background-color: white;
 }
 
-.page > a,
-.annotationLayer > a {
+.annotationLayer > div.namedAction {
+  cursor: pointer;
+}
+
+.annotationLayer > a,
+.annotationLayer > div.namedAction {
   display: block;
   position: absolute;
 }
 
-.page > a:hover,
-.annotationLayer > a:hover {
+.annotationLayer > a:hover,
+.annotationLayer > div.namedAction:hover {
   opacity: 0.2;
   background: #ff0;
   box-shadow: 0px 2px 10px #ff0;

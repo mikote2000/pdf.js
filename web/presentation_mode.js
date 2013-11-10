@@ -178,10 +178,15 @@ var PresentationMode = {
     if (evt.button === 0) {
       // Enable clicking of links in presentation mode. Please note:
       // Only links pointing to destinations in the current PDF document work.
-      var isInternalLink = (evt.target.href &&
-                            evt.target.classList.contains('internalLink'));
-      if (!isInternalLink) {
-        // Unless an internal link was clicked, advance one page.
+      var isInternalLink, isNamedAction;
+      if (evt.target.href) {
+        isInternalLink = evt.target.classList.contains('internalLink');
+      } else if (evt.target.onclick) {
+        isNamedAction = evt.target.classList.contains('namedAction');
+      }
+      if (!(isInternalLink || isNamedAction)) {
+        // Unless an internal link (or a Named action) was clicked,
+        // advance one page.
         evt.preventDefault();
         PDFView.page += (evt.shiftKey ? -1 : 1);
       }

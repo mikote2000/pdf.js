@@ -671,7 +671,8 @@ var LinkAnnotation = (function LinkAnnotationClosure() {
 
     getHtmlElement: function LinkAnnotation_getHtmlElement(commonObjs) {
       var rect = this.data.rect;
-      var element = document.createElement('a');
+      // Create a link, unless the current annotation is a "Named action".
+      var element = document.createElement(this.data.action ? 'div' : 'a');
       var borderWidth = this.data.borderWidth;
 
       element.style.borderWidth = borderWidth + 'px';
