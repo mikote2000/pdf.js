@@ -281,6 +281,11 @@ target.locale = function() {
       cp(path + '/chrome.properties', EXTENSION_LOCALE_OUTPUT + '/' + locale);
     }
 
+    if (test('-f', path + '/pages.properties')) {
+      cp(path + '/pages.properties',
+         EXTENSION_LOCALE_OUTPUT + '/' + locale);
+    }
+
     if (test('-f', path + '/metadata.inc')) {
       var metadata = cat(path + '/metadata.inc');
       metadataContent += metadata;
@@ -600,7 +605,8 @@ target.firefox = function() {
          'icon64.png',
          'content',
          'locale',
-         'LICENSE'],
+         'LICENSE',
+         'pages'],
       FIREFOX_EXTENSION_NAME = 'pdf.js.xpi',
       FIREFOX_AMO_EXTENSION_NAME = 'pdf.js.amo.xpi';
 
@@ -614,6 +620,7 @@ target.firefox = function() {
   mkdir('-p', FIREFOX_BUILD_CONTENT_DIR + BUILD_DIR);
   mkdir('-p', FIREFOX_BUILD_CONTENT_DIR + '/web');
   mkdir('-p', FIREFOX_BUILD_CONTENT_DIR + '/web/cmaps');
+  mkdir('-p', FIREFOX_BUILD_DIR + '/pages');
 
   cp(FIREFOX_CONTENT_DIR + 'PdfJs-stub.jsm',
      FIREFOX_BUILD_CONTENT_DIR + 'PdfJs.jsm');
@@ -633,7 +640,11 @@ target.firefox = function() {
       ['web/compatibility.js', FIREFOX_BUILD_CONTENT_DIR + '/web'],
       ['external/bcmaps/*', FIREFOX_BUILD_CONTENT_DIR + '/web/cmaps'],
       [FIREFOX_EXTENSION_DIR + 'tools/l10n.js',
-       FIREFOX_BUILD_CONTENT_DIR + '/web']
+       FIREFOX_BUILD_CONTENT_DIR + '/web'],
+      [FIREFOX_EXTENSION_DIR + 'pages/preferences_page.css',
+       FIREFOX_BUILD_DIR + '/pages'],
+      [FIREFOX_EXTENSION_DIR + 'pages/l10n.js',
+       FIREFOX_BUILD_DIR + '/pages']
     ],
     preprocess: [
       [COMMON_WEB_FILES_PREPROCESS, FIREFOX_BUILD_CONTENT_DIR + '/web'],
@@ -642,7 +653,11 @@ target.firefox = function() {
        FIREFOX_BUILD_CONTENT_DIR],
       [FIREFOX_CONTENT_DIR + 'PdfRedirector.jsm', FIREFOX_BUILD_CONTENT_DIR],
       [SRC_DIR + 'core/network.js', FIREFOX_BUILD_CONTENT_DIR],
-      [FIREFOX_EXTENSION_DIR + 'bootstrap.js', FIREFOX_BUILD_DIR]
+      [FIREFOX_EXTENSION_DIR + 'bootstrap.js', FIREFOX_BUILD_DIR],
+      [FIREFOX_EXTENSION_DIR + 'pages/preferences_page.html',
+       FIREFOX_BUILD_DIR + '/pages'],
+      [FIREFOX_EXTENSION_DIR + 'pages/preferences_page.js',
+       FIREFOX_BUILD_DIR + '/pages'],
     ],
     preprocessCSS: [
       ['firefox', 'web/viewer.css',
@@ -653,6 +668,7 @@ target.firefox = function() {
 
   cleanupJSSource(FIREFOX_BUILD_CONTENT_DIR + '/web/viewer.js');
   cleanupJSSource(FIREFOX_BUILD_DIR + 'bootstrap.js');
+  cleanupJSSource(FIREFOX_BUILD_DIR + 'pages/preferences_page.js');
 
   // Remove '.DS_Store' and other hidden files
   find(FIREFOX_BUILD_DIR).forEach(function(file) {
@@ -673,6 +689,9 @@ target.firefox = function() {
       FIREFOX_BUILD_CONTENT_DIR + 'PdfStreamConverter.jsm');
   sed('-i', /PDFJSSCRIPT_MOZ_CENTRAL/, 'false',
       FIREFOX_BUILD_CONTENT_DIR + 'PdfStreamConverter.jsm');
+
+  sed('-i', /PDFJSSCRIPT_PREF_PREFIX/, FIREFOX_PREF_PREFIX,
+      FIREFOX_BUILD_DIR + 'pages/preferences_page.js');
 
   // Update localized metadata
   var localizedMetadata = cat(EXTENSION_SRC_DIR + '/firefox/metadata.inc');
