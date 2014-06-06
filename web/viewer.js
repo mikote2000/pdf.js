@@ -105,6 +105,10 @@ var currentPageNumber = 1;
 //#include password_prompt.js
 //#include document_properties.js
 
+//#if GENERIC
+//#include ../extensions/firefox/pages/preferences_page.js
+//#endif
+
 var PDFView = {
   pages: [],
   thumbnails: [],
@@ -216,6 +220,28 @@ var PDFView = {
       versionField: document.getElementById('versionField'),
       pageCountField: document.getElementById('pageCountField')
     });
+
+//#if GENERIC
+//  PreferencesPage.initialize({
+//    overlayName: 'preferencesOverlay',
+//    openButton: document.getElementById('secondaryPreferences'),
+//    resetButton: document.getElementById('preferencesReset'),
+//    closeButton: document.getElementById('preferencesClose'),
+//    showPreviousViewOnLoad:
+//      document.getElementById('preferencesShowPreviousViewOnLoad'),
+//    defaultZoomValue: document.getElementById('preferencesDefaultZoomValue'),
+//    sidebarViewOnLoad:
+//      document.getElementById('preferencesSidebarViewOnLoad'),
+//    enableHandToolOnLoad:
+//      document.getElementById('preferencesEnableHandToolOnLoad'),
+//    enableWebGL: document.getElementById('preferencesEnableWebGL'),
+//    disableRange: document.getElementById('preferencesDisableRange'),
+//    disableAutoFetch: document.getElementById('preferencesDisableAutoFetch'),
+//    disableFontFace: document.getElementById('preferencesDisableFontFace'),
+//    disableTextLayer: document.getElementById('preferencesDisableTextLayer'),
+//    useOnlyCssZoom: document.getElementById('preferencesUseOnlyCssZoom'),
+//  });
+//#endif
 
     container.addEventListener('scroll', function() {
       self.lastScroll = Date.now();

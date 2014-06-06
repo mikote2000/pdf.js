@@ -194,9 +194,14 @@ http://sourceforge.net/adobe/cmap/wiki/License/
             </button>
 
 <!--#if FIREFOX-->
-	    <a href="chrome://pdf.js/content/preferences_page.html" target="_blank" id="secondaryPreferences" class="secondaryToolbarButton preferences" title="Preferences…" tabindex="24" data-l10n-id="preferences">
-              <span data-l10n-id="preferences_label">Preferences…</span>
-            </a>
+<!--        <a href="chrome://pdf.js/content/preferences_page.html" target="_blank" id="secondaryPreferences" class="secondaryToolbarButton preferences" title="Preferences…" tabindex="24" data-l10n-id="preferences">-->
+<!--          <span data-l10n-id="preferences_label">Preferences…</span>-->
+<!--        </a>-->
+<!--#endif-->
+<!--#if GENERIC-->
+<!--        <button id="secondaryPreferences" class="secondaryToolbarButton preferences" title="Preferences…" tabindex="24" data-l10n-id="preferences">-->
+<!--          <span data-l10n-id="preferences_label">Preferences…</span>-->
+<!--        </button>-->
 <!--#endif-->
           </div>
         </div>  <!-- secondaryToolbar -->
@@ -382,6 +387,17 @@ http://sourceforge.net/adobe/cmap/wiki/License/
             </div>
             <div class="buttonRow">
               <button id="documentPropertiesClose" class="overlayButton"><span data-l10n-id="document_properties_close">Close</span></button>
+            </div>
+          </div>
+        </div>
+        <div id="preferencesOverlay" class="container hidden">
+          <div class="dialog">
+<!--#if GENERIC-->
+<!--#include ../extensions/firefox/pages/preferences_page_snippet.html-->
+<!--#endif-->
+            <div class="buttonRow">
+              <button id="preferencesReset" class="overlayButton"><span data-l10n-id="preferences_reset">Reset…</span></button>
+              <button id="preferencesClose" class="overlayButton"><span data-l10n-id="preferences_close">Close</span></button>
             </div>
           </div>
         </div>

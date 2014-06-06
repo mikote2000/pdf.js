@@ -15,8 +15,7 @@
  * limitations under the License.
  */
 /* jshint esnext: true */
-/* globals Services, Promise, DEFAULT_PREFERENCES, Preferences,
-           OverlayManager */
+/* globals Services, Promise, DEFAULT_PREFERENCES */
 
 'use strict';
 
@@ -33,14 +32,20 @@ var PreferencesPage = {
 
   initialize: function preferencesPageInitialize(options) {
 //#if GENERIC
-    if (options['overlayName'] !== undefined) {
-      this.overlayName = options['closeButton'];
-      delete options['overlayName'];
-    }
-    if (options['closeButton'] !== undefined) {
-      options.closeButton.addEventListener('click', this.close.bind(this));
-      delete options['closeButton'];
-    }
+//  if (options['overlayName'] !== undefined) {
+//    this.overlayName = options['overlayName'];
+//    delete options['overlayName'];
+//  }
+//  if (options['openButton'] !== undefined) {
+//    options.openButton.addEventListener('click', this.open.bind(this));
+//    delete options['openButton'];
+//  }
+//  if (options['closeButton'] !== undefined) {
+//    options.closeButton.addEventListener('click', this.close.bind(this));
+//    delete options['closeButton'];
+//  }
+//  OverlayManager.register(this.overlayName, this.close.bind(this));
+//
 //#endif
     if (options['resetButton'] !== undefined) {
       options.resetButton.addEventListener('click', this.reset.bind(this));
@@ -149,13 +154,23 @@ var PreferencesPage = {
   },
 
   open: function PreferencesPageOpen() {
-    this._readPrefs().then(function (readPrefs) {
-      this.prefs = readPrefs;
+//#if GENERIC
+//  Promise.all([OverlayManager.open(this.overlayName),
+//               Preferences.reload()]).then(function () {
+//#endif
+    this._readPrefs().then(function () {
       this.updateUI();
     }.bind(this));
+//#if GENERIC
+//  }.bind(this));
+//  SecondaryToolbar.close();
+//#endif
   },
 
   close: function PreferencesPageClose() {
+//#if GENERIC
+//  OverlayManager.close(this.overlayName);
+//#endif
   },
 
   _writePrefs: function PreferencesPage_writePrefs() {
@@ -182,31 +197,52 @@ var PreferencesPage = {
       resolve();
     }.bind(this));
 //#endif
+//#if GENERIC
+//  var writtenPromises = [];
+//
+//  for (var key in DEFAULT_PREFERENCES) {
+//    var newPrefValue = this.prefs[key];
+//
+//    if (newPrefValue === undefined) {
+//      continue;
+//    }
+//    writtenPromises.push(Preferences.set(key, newPrefValue));
+//  }
+//  return Promise.all(writtenPromises);
+//#endif
   },
 
   _readPrefs: function PreferencesPage_readPrefs() {
 //#if (FIREFOX || MOZCENTRAL)
     return new Promise(function (resolve) {
-      var prefs = {};
-    
       for (var key in DEFAULT_PREFERENCES) {
         if (!branch.getPrefType(key)) {
           continue;
         }
         switch (typeof DEFAULT_PREFERENCES[key]) {
           case 'boolean':
-            prefs[key] = branch.getBoolPref(key);
+            this.prefs[key] = branch.getBoolPref(key);
             break;
           case 'number':
-            prefs[key] = branch.getIntPref(key);
+            this.prefs[key] = branch.getIntPref(key);
             break;
           case 'string':
-            prefs[key] = branch.getCharPref(key);
+            this.prefs[key] = branch.getCharPref(key);
             break;
         }
       }
-      resolve(prefs);
-    });
+      resolve();
+    }.bind(this));
+//#endif
+//#if GENERIC
+//  var readPromises = [];
+//
+//  for (var key in DEFAULT_PREFERENCES) {
+//    readPromises.push(Preferences.get(key).then(function (key, value) {
+//      this.prefs[key] = value;
+//    }.bind(this, key)));
+//  }
+//  return Promise.all(readPromises);
 //#endif
   }
 };
@@ -214,6 +250,7 @@ var PreferencesPage = {
 //#if (FIREFOX || MOZCENTRAL)
 document.addEventListener('DOMContentLoaded', function () {
   PreferencesPage.initialize({
+    resetButton: document.getElementById('preferencesReset'),
     showPreviousViewOnLoad:
       document.getElementById('preferencesShowPreviousViewOnLoad'),
     defaultZoomValue: document.getElementById('preferencesDefaultZoomValue'),
@@ -225,8 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
     disableAutoFetch: document.getElementById('preferencesDisableAutoFetch'),
     disableFontFace: document.getElementById('preferencesDisableFontFace'),
     disableTextLayer: document.getElementById('preferencesDisableTextLayer'),
-    useOnlyCssZoom: document.getElementById('preferencesUseOnlyCssZoom'),
-    resetButton: document.getElementById('preferencesReset')
+    useOnlyCssZoom: document.getElementById('preferencesUseOnlyCssZoom')
   });
 
   PreferencesPage.open();
