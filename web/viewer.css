@@ -914,7 +914,9 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
 }
 
 .toolbarButton.bookmark,
-.secondaryToolbarButton.bookmark {
+.secondaryToolbarButton.bookmark,
+a.toolbarButton.preferences,
+a.secondaryToolbarButton.preferences {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -922,11 +924,16 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
   padding-top: 4px;
   text-decoration: none;
 }
-.secondaryToolbarButton.bookmark {
+.secondaryToolbarButton.bookmark,
+a.secondaryToolbarButton.preferences {
   padding-top: 5px;
 }
+a.secondaryToolbarButton.preferences {
+  display: inline-block;
+}
 
-.bookmark[href='#'] {
+.bookmark[href='#'],
+a.preferences[href='#'] {
   opacity: .5;
   pointer-events: none;
 }
@@ -934,6 +941,11 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
 .toolbarButton.bookmark::before,
 .secondaryToolbarButton.bookmark::before {
   content: url(images/toolbarButton-bookmark.png);
+}
+
+.toolbarButton.preferences::before,
+.secondaryToolbarButton.preferences::before {
+  content: url(images/toolbarButton-preferences.png);
 }
 
 #viewThumbnail.toolbarButton::before {
@@ -973,10 +985,12 @@ html[dir="rtl"] .secondaryToolbarButton {
   padding-right: 24px;
   text-align: right;
 }
-html[dir="ltr"] .secondaryToolbarButton.bookmark {
+html[dir="ltr"] .secondaryToolbarButton.bookmark,
+html[dir="ltr"] a.secondaryToolbarButton.preferences {
   padding-left: 27px;
 }
-html[dir="rtl"] .secondaryToolbarButton.bookmark {
+html[dir="rtl"] .secondaryToolbarButton.bookmark
+html[dir="rtl"] a.secondaryToolbarButton.preferences {
   padding-right: 27px;
 }
 
@@ -1746,6 +1760,11 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   .toolbarButton.bookmark::before,
   .secondaryToolbarButton.bookmark::before {
     content: url(images/toolbarButton-bookmark@2x.png);
+  }
+
+  .toolbarButton.preferences::before,
+  .secondaryToolbarButton.preferences::before {
+    content: url(images/toolbarButton-preferences@2x.png);
   }
 
   #viewThumbnail.toolbarButton::before {
