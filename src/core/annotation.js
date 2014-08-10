@@ -472,9 +472,9 @@ var LinkAnnotation = (function LinkAnnotationClosure() {
 
     var action = dict.get('A');
     if (action) {
-      var linkType = action.get('S').name;
+      var linkType = action.get('S').name, url;
       if (linkType === 'URI') {
-        var url = action.get('URI');
+        url = action.get('URI');
         if (isName(url)) {
           // Some bad PDFs do not put parentheses around relative URLs.
           url = '/' + url.name;

@@ -861,7 +861,7 @@ var AES128Cipher = (function AES128CipherClosure() {
   }
 
   function encrypt128(input, key) {
-    var t, u, v, k;
+    var i, j, k, t, u, v;
     var state = new Uint8Array(16);
     state.set(input);
     for (j = 0; j < 16; ++j) {
@@ -894,7 +894,7 @@ var AES128Cipher = (function AES128CipherClosure() {
       state[11] = u;
       state[15] = t;
       //MixColumns
-      for (var j = 0; j < 16; j += 4) {
+      for (j = 0; j < 16; j += 4) {
         var s0 = state[j + 0], s1 = state[j + 1];
         var s2 = state[j + 2], s3 = state[j + 3];
         t = s0 ^ s1 ^ s2 ^ s3;
@@ -1189,6 +1189,7 @@ var AES256Cipher = (function AES256CipherClosure() {
     0x9f5d80be, 0x91548db5, 0x834f9aa8, 0x8d4697a3]);
 
   function expandKey256(cipherKey) {
+    var t1, t2, t3, t4;
     var b = 240, result = new Uint8Array(b);
     var r = 1;
 
@@ -1201,8 +1202,10 @@ var AES256Cipher = (function AES256CipherClosure() {
         t4 = s[t4];
       } else if (j % 32 === 0) {
         // RotWord
-        var t1 = result[j - 3], t2 = result[j - 2],
-          t3 = result[j - 1], t4 = result[j - 4];
+        t1 = result[j - 3];
+        t2 = result[j - 2];
+        t3 = result[j - 1];
+        t4 = result[j - 4];
         // SubWord
         t1 = s[t1];
         t2 = s[t2];
@@ -1307,7 +1310,7 @@ var AES256Cipher = (function AES256CipherClosure() {
   }
 
   function encrypt256(input, key) {
-    var t, u, v, k;
+    var i, j, k, t, u, v;
     var state = new Uint8Array(16);
     state.set(input);
     for (j = 0; j < 16; ++j) {
@@ -1340,7 +1343,7 @@ var AES256Cipher = (function AES256CipherClosure() {
       state[11] = u;
       state[15] = t;
       //MixColumns
-      for (var j = 0; j < 16; j += 4) {
+      for (j = 0; j < 16; j += 4) {
         var s0 = state[j + 0], s1 = state[j + 1];
         var s2 = state[j + 2], s3 = state[j + 3];
         t = s0 ^ s1 ^ s2 ^ s3;

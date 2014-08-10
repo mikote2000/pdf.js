@@ -798,7 +798,7 @@ var XRef = (function XRefClosure() {
       parser.buf2 = tableState.parserBuf2;
 
       // Outer loop is over subsection headers
-      var obj;
+      var obj, first;
 
       while (true) {
         if (!('firstEntryNum' in tableState) || !('entryCount' in tableState)) {
@@ -809,7 +809,7 @@ var XRef = (function XRefClosure() {
           tableState.entryCount = parser.getObj();
         }
 
-        var first = tableState.firstEntryNum;
+        first = tableState.firstEntryNum;
         var count = tableState.entryCount;
         if (!isInt(first) || !isInt(count)) {
           error('Invalid XRef table: wrong types in subsection header');

@@ -620,6 +620,7 @@ var JpegImage = (function jpegImage() {
         frame.mcusPerColumn = mcusPerColumn;
       }
 
+      var i, j, l, component;
       var offset = 0, length = data.length;
       var jfif = null;
       var adobe = null;
@@ -634,7 +635,6 @@ var JpegImage = (function jpegImage() {
 
       fileMarker = readUint16();
       while (fileMarker !== 0xFFD9) { // EOI (End of image)
-        var i, j, l;
         switch(fileMarker) {
           case 0xFFE0: // APP0 (Application Specific)
           case 0xFFE1: // APP1
@@ -780,7 +780,7 @@ var JpegImage = (function jpegImage() {
           case 0xFFDA: // SOS (Start of Scan)
             var scanLength = readUint16();
             var selectorsCount = data[offset++];
-            var components = [], component;
+            var components = [];
             for (i = 0; i < selectorsCount; i++) {
               var componentIndex = frame.componentIds[data[offset++]];
               component = frame.components[componentIndex];

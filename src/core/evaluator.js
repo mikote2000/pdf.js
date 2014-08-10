@@ -1536,9 +1536,9 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
         composite = true;
       }
 
-      var descriptor = dict.get('FontDescriptor');
+      var descriptor = dict.get('FontDescriptor'), hash;
       if (descriptor) {
-        var hash = new MurmurHash3_64();
+        hash = new MurmurHash3_64();
         var encoding = baseDict.getRaw('Encoding');
         if (isName(encoding)) {
           hash.update(encoding.name);
@@ -1667,14 +1667,15 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
       assert(isName(fontName), 'invalid font name');
 
       var fontFile = descriptor.get('FontFile', 'FontFile2', 'FontFile3');
+      var subtype, length1, length2;
       if (fontFile) {
         if (fontFile.dict) {
-          var subtype = fontFile.dict.get('Subtype');
+          subtype = fontFile.dict.get('Subtype');
           if (subtype) {
             subtype = subtype.name;
           }
-          var length1 = fontFile.dict.get('Length1');
-          var length2 = fontFile.dict.get('Length2');
+          length1 = fontFile.dict.get('Length1');
+          length2 = fontFile.dict.get('Length2');
         }
       }
 
@@ -2375,13 +2376,13 @@ var QueueOptimizer = (function QueueOptimizerClosure() {
 
       var q;
       var isSameImage = false;
-      var iTransform, transformArgs;
+      var iTransform, transformArgs, firstTransformArg0, firstTransformArg3;
       var firstPIMXOArg0 = argsArray[iFirstPIMXO][0];
       if (argsArray[iFirstTransform][1] === 0 &&
           argsArray[iFirstTransform][2] === 0) {
         isSameImage = true;
-        var firstTransformArg0 = argsArray[iFirstTransform][0];
-        var firstTransformArg3 = argsArray[iFirstTransform][3];
+        firstTransformArg0 = argsArray[iFirstTransform][0];
+        firstTransformArg3 = argsArray[iFirstTransform][3];
         iTransform = iFirstTransform + 4;
         var iPIMXO = iFirstPIMXO + 4;
         for (q = 1; q < count; q++, iTransform += 4, iPIMXO += 4) {

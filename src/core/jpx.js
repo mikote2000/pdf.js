@@ -115,7 +115,8 @@ var JpxImage = (function JpxImageClosure() {
           var code = readUint16(data, position);
           position += 2;
 
-          var length = 0, j, sqcd, spqcds, spqcdSize, scalarExpounded, tile;
+          var length = 0;
+          var j, sqcd, spqcd, spqcds, spqcdSize, scalarExpounded, tile;
           switch (code) {
             case 0xFF4F: // Start of codestream (SOC)
               context.mainHeader = true;
@@ -184,7 +185,7 @@ var JpxImage = (function JpxImageClosure() {
               qcd.guardBits = sqcd >> 5;
               spqcds = [];
               while (j < length + position) {
-                var spqcd = {};
+                spqcd = {};
                 if (spqcdSize === 8) {
                   spqcd.epsilon = data[j++] >> 3;
                   spqcd.mu = 0;
@@ -802,13 +803,13 @@ var JpxImage = (function JpxImageClosure() {
         var codeblockRow = codeblock.cby - precinct.cbyMin;
         var codeblockIncluded = false;
         var firstTimeInclusion = false;
-        var valueReady;
+        var zeroBitPlanesTree, valueReady;
         if ('included' in codeblock) {
           codeblockIncluded = !!readBits(1);
         } else {
           // reading inclusion tree
           precinct = codeblock.precinct;
-          var inclusionTree, zeroBitPlanesTree;
+          var inclusionTree;
           if ('inclusionTree' in precinct) {
             inclusionTree = precinct.inclusionTree;
           } else {

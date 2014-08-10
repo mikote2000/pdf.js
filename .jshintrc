@@ -16,7 +16,6 @@
 
   // Relaxing
   "boss": true,
-  "funcscope": true,
   "globalstrict": true,
   "loopfunc": true,
   "maxerr": 1000,

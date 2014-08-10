@@ -307,7 +307,7 @@ var Stepper = (function StepperClosure() {
       }
     },
     updateOperatorList: function updateOperatorList(operatorList) {
-      var self = this;
+      var self = this, line;
 
       function cboxOnClick() {
         var x = +this.dataset.idx;
@@ -328,7 +328,7 @@ var Stepper = (function StepperClosure() {
       var operatorsToDisplay = Math.min(MAX_OPERATORS_COUNT,
                                         operatorList.fnArray.length);
       for (var i = this.operatorListIdx; i < operatorsToDisplay; i++) {
-        var line = c('tr');
+        line = c('tr');
         line.className = 'line';
         line.dataset.idx = i;
         chunk.appendChild(line);

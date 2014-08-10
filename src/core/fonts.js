@@ -3187,7 +3187,7 @@ var Font = (function FontClosure() {
             segments[segIndex].delta = font.getUint16();
           }
 
-          var offsetsCount = 0;
+          var offsetIndex, offsetsCount = 0;
           for (segIndex = 0; segIndex < segCount; segIndex++) {
             segment = segments[segIndex];
             var rangeOffset = font.getUint16();
@@ -3196,7 +3196,7 @@ var Font = (function FontClosure() {
               continue;
             }
 
-            var offsetIndex = (rangeOffset >> 1) - (segCount - segIndex);
+            offsetIndex = (rangeOffset >> 1) - (segCount - segIndex);
             segment.offsetIndex = offsetIndex;
             offsetsCount = Math.max(offsetsCount, offsetIndex +
                                     segment.end - segment.start + 1);
@@ -5169,7 +5169,7 @@ var Type1Parser = (function Type1ParserClosure() {
           }
         }
       };
-      var token, length, data, lenIV, encoded;
+      var token, glyph, length, data, lenIV, encoded;
       while ((token = this.getToken()) !== null) {
         if (token !== '/') {
           continue;
@@ -5192,7 +5192,7 @@ var Type1Parser = (function Type1ParserClosure() {
               if (token !== '/') {
                 continue;
               }
-              var glyph = this.getToken();
+              glyph = this.getToken();
               length = this.readInt();
               this.getToken(); // read in 'RD' or '-|'
               data = stream.makeSubStream(stream.pos, length);
@@ -5486,9 +5486,9 @@ Type1Font.prototype = {
     for (glyphId = 0; glyphId < charstrings.length; glyphId++) {
       glyphNames.push(charstrings[glyphId].glyphName);
     }
-    var encoding = properties.builtInEncoding;
+    var encoding = properties.builtInEncoding, builtInEncoding;
     if (encoding) {
-      var builtInEncoding = {};
+      builtInEncoding = {};
       for (var charCode in encoding) {
         glyphId = glyphNames.indexOf(encoding[charCode]);
         if (glyphId >= 0) {

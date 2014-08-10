@@ -574,10 +574,10 @@ var CanvasGraphics = (function CanvasGraphicsClosure() {
       // inversion has already been handled.
       var destPos = 3; // alpha component offset
       for (var j = 0; j < thisChunkHeight; j++) {
-        var mask = 0;
+        var mask = 0, elem;
         for (var k = 0; k < width; k++) {
           if (!mask) {
-            var elem = src[srcPos++];
+            elem = src[srcPos++];
             mask = 128;
           }
           dest[destPos] = (elem & mask) ? 0 : 255;
@@ -1963,13 +1963,13 @@ var CanvasGraphics = (function CanvasGraphicsClosure() {
       var c = currentTransform[2], d = currentTransform[3];
       var heightScale = Math.max(Math.sqrt(c * c + d * d), 1);
 
-      var imgToPaint, tmpCanvas;
+      var imgToPaint, tmpCanvas, tmpCtx;
       // instanceof HTMLElement does not work in jsdom node.js module
       if (imgData instanceof HTMLElement || !imgData.data) {
         imgToPaint = imgData;
       } else {
         tmpCanvas = CachedCanvases.getCanvas('inlineImage', width, height);
-        var tmpCtx = tmpCanvas.context;
+        tmpCtx = tmpCanvas.context;
         putBinaryImageData(tmpCtx, imgData);
         imgToPaint = tmpCanvas.canvas;
       }

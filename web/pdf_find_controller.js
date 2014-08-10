@@ -303,9 +303,10 @@ var PDFFindController = (function PDFFindControllerClosure() {
       if (this.resumePageIdx !== null) {
         console.error('There can only be one pending page.');
       }
+      var matches;
       do {
         var pageIdx = this.offset.pageIdx;
-        var matches = this.pageMatches[pageIdx];
+        matches = this.pageMatches[pageIdx];
         if (!matches) {
           // The matches don't exist yet for processing by "matchesReady",
           // so set a resume point for when they do exist.

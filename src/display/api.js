@@ -922,9 +922,9 @@ var WorkerTransport = (function WorkerTransportClosure() {
 
             var font;
             if ('error' in exportedData) {
-              var error = exportedData.error;
-              warn('Error during font loading: ' + error);
-              this.commonObjs.resolve(id, error);
+              var fontError = exportedData.error;
+              warn('Error during font loading: ' + fontError);
+              this.commonObjs.resolve(id, fontError);
               break;
             } else {
               font = new FontFace(exportedData);

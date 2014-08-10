@@ -85,7 +85,7 @@ var ColorSpace = (function ColorSpaceClosure() {
       var rgbBuf = null;
       var numComponentColors = 1 << bpc;
       var needsResizing = originalHeight !== height || originalWidth !== width;
-      var i, ii;
+      var destPos, rgbPos, i, ii;
 
       if (this.isPassthrough(bpc)) {
         rgbBuf = comps;
@@ -110,7 +110,6 @@ var ColorSpace = (function ColorSpaceClosure() {
         this.getRgbBuffer(allColors, 0, numComponentColors, colorMap, 0, bpc,
                           /* alpha01 = */ 0);
 
-        var destPos, rgbPos;
         if (!needsResizing) {
           // Fill in the RGB values directly into |dest|.
           destPos = 0;
