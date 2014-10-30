@@ -359,6 +359,11 @@ var PDFViewer = (function pdfViewer() {
                              currentPage.width * currentPage.scale;
         var pageHeightScale = (this.container.clientHeight - vPadding) /
                               currentPage.height * currentPage.scale;
+        // Limit the scale values to eight decimal places to avoid updating the
+        // pages due to the scale values changing because of rounding errors.
+        pageWidthScale = Math.round(100000000 * pageWidthScale) / 100000000;
+        pageHeightScale = Math.round(100000000 * pageHeightScale) / 100000000;
+
         switch (value) {
           case 'page-actual':
             scale = 1;
