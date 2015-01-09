@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* globals RenderingStates, PDFJS, CustomStyle, CSS_UNITS, getOutputScale,
+/* globals RenderingStates, PDFJS, CustomStyle, getOutputScale,
            TextLayerBuilder, AnnotationsLayerBuilder, Promise */
 
 'use strict';
@@ -26,6 +26,7 @@ var TEXT_LAYER_RENDER_DELAY = 200; // ms
  * @property {HTMLDivElement} container - The viewer element.
  * @property {number} id - The page unique ID (normally its number).
  * @property {number} scale - The page scale display.
+ * @property {number} cssUnits - The page PDF-to-CSS unit conversion.
  * @property {PageViewport} defaultViewport - The page viewport.
  * @property {PDFRenderingQueue} renderingQueue - The rendering queue object.
  * @property {IPDFTextLayerFactory} textLayerFactory
@@ -45,6 +46,7 @@ var PDFPageView = (function PDFPageViewClosure() {
     var container = options.container;
     var id = options.id;
     var scale = options.scale;
+    var cssUnits = options.cssUnits;
     var defaultViewport = options.defaultViewport;
     var renderingQueue = options.renderingQueue;
     var textLayerFactory = options.textLayerFactory;
@@ -55,6 +57,7 @@ var PDFPageView = (function PDFPageViewClosure() {
 
     this.rotation = 0;
     this.scale = scale || 1.0;
+    this.cssUnits = cssUnits || 1;
     this.viewport = defaultViewport;
     this.pdfPageRotate = defaultViewport.rotation;
     this.hasRestrictedScaling = false;
@@ -95,7 +98,7 @@ var PDFPageView = (function PDFPageViewClosure() {
       this.pdfPage = pdfPage;
       this.pdfPageRotate = pdfPage.rotate;
       var totalRotation = (this.rotation + this.pdfPageRotate) % 360;
-      this.viewport = pdfPage.getViewport(this.scale * CSS_UNITS,
+      this.viewport = pdfPage.getViewport(this.scale * this.cssUnits,
                                           totalRotation);
       this.stats = pdfPage.stats;
       this.reset();
@@ -165,7 +168,7 @@ var PDFPageView = (function PDFPageViewClosure() {
 
       var totalRotation = (this.rotation + this.pdfPageRotate) % 360;
       this.viewport = this.viewport.clone({
-        scale: this.scale * CSS_UNITS,
+        scale: this.scale * this.cssUnits,
         rotation: totalRotation
       });
 
@@ -319,7 +322,7 @@ var PDFPageView = (function PDFPageViewClosure() {
       var outputScale = getOutputScale(ctx);
 
       if (PDFJS.useOnlyCssZoom) {
-        var actualSizeViewport = viewport.clone({ scale: CSS_UNITS });
+        var actualSizeViewport = viewport.clone({ scale: this.cssUnits });
         // Use a scale that will make the canvas be the original intended size
         // of the page.
         outputScale.sx *= actualSizeViewport.width / viewport.width;

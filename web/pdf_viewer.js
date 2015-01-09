@@ -264,6 +264,7 @@ var PDFViewer = (function pdfViewer() {
             container: this.viewer,
             id: pageNum,
             scale: scale,
+            cssUnits: CSS_UNITS,
             defaultViewport: viewport.clone(),
             renderingQueue: this.renderingQueue,
             textLayerFactory: textLayerFactory,
