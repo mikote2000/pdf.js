@@ -651,6 +651,13 @@
        "type": "eq",
        "about": "Glyph that gets mapped to unicode non-breaking-space."
     },
+    {  "id": "issue5687-text",
+       "file": "pdfs/issue5687.pdf",
+       "md5": "895e21c99117ef67f509819616288aee",
+       "link": false,
+       "rounds": 1,
+       "type": "text"
+    },
     {  "id": "simpletype3font",
        "file": "pdfs/simpletype3font.pdf",
        "md5": "b374c7543920840c61999e9e86939f99",
