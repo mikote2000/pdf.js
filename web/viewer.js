@@ -666,30 +666,11 @@ var PDFViewerApplication = {
 
   getDestinationHash: function pdfViewGetDestinationHash(dest) {
     if (typeof dest === 'string') {
-      return this.getAnchorUrl('#' + escape(dest));
+      return this.getAnchorUrl('#nameddest=' + escape(dest));
     }
     if (dest instanceof Array) {
-      var destRef = dest[0]; // see navigateTo method for dest format
-      var pageNumber = destRef instanceof Object ?
-        this.pagesRefMap[destRef.num + ' ' + destRef.gen + ' R'] :
-        (destRef + 1);
-      if (pageNumber) {
-        var pdfOpenParams = this.getAnchorUrl('#page=' + pageNumber);
-        var destKind = dest[1];
-        if (typeof destKind === 'object' && 'name' in destKind &&
-            destKind.name === 'XYZ') {
-          var scale = (dest[4] || this.currentScaleValue);
-          var scaleNumber = parseFloat(scale);
-          if (scaleNumber) {
-            scale = scaleNumber * 100;
-          }
-          pdfOpenParams += '&zoom=' + scale;
-          if (dest[2] || dest[3]) {
-            pdfOpenParams += ',' + (dest[2] || 0) + ',' + (dest[3] || 0);
-          }
-        }
-        return pdfOpenParams;
-      }
+      var str = JSON.stringify(dest);
+      return this.getAnchorUrl('#' + escape(str));
     }
     return '';
   },
@@ -1143,7 +1124,14 @@ var PDFViewerApplication = {
     } else if (/^\d+$/.test(hash)) { // page number
       this.page = hash;
     } else { // named destination
-      this.navigateTo(unescape(hash));
+      var unescapedHash = unescape(hash);
+      try {
+        var destArray = JSON.parse(unescapedHash);
+        if (destArray instanceof Array) {
+          unescapedHash = destArray;
+        }
+      } catch (e) { }
+      this.navigateTo(unescapedHash);
     }
   },
 
