@@ -599,9 +599,6 @@ var PDFViewerApplication = {
           pageNumber = self.pagesCount;
         }
         self.pdfViewer.scrollPageIntoView(pageNumber, dest);
-
-        // Update the browsing history.
-        PDFHistory.push({ dest: dest, hash: destString, page: pageNumber });
       } else {
         self.pdfDocument.getPageIndex(destRef).then(function (pageIndex) {
           var pageNum = pageIndex + 1;
@@ -635,11 +632,9 @@ var PDFViewerApplication = {
         break;
 
       case 'GoBack':
-        PDFHistory.back();
         break;
 
       case 'GoForward':
-        PDFHistory.forward();
         break;
 
       case 'Find':
@@ -868,7 +863,6 @@ var PDFViewerApplication = {
       if (!PDFJS.disableHistory && !self.isViewerEmbedded) {
         // The browsing history is only enabled when the viewer is standalone,
         // i.e. not when it is embedded in a web page.
-        PDFHistory.initialize(self.documentFingerprint, self);
       }
     });
 
@@ -1060,12 +1054,8 @@ var PDFViewerApplication = {
     document.getElementById('pageNumber').value =
       this.pdfViewer.currentPageNumber = 1;
 
-    if (PDFHistory.initialDestination) {
-      this.navigateTo(PDFHistory.initialDestination);
-      PDFHistory.initialDestination = null;
-    } else if (this.initialBookmark) {
+    if (this.initialBookmark) {
       this.setHash(this.initialBookmark);
-      PDFHistory.push({ hash: this.initialBookmark }, !!this.initialBookmark);
       this.initialBookmark = null;
     } else if (storedHash) {
       this.setHash(storedHash);
@@ -1110,7 +1100,6 @@ var PDFViewerApplication = {
       var params = this.parseQueryString(hash);
       // borrowing syntax from "Parameters for Opening PDF Files"
       if ('nameddest' in params) {
-        PDFHistory.updateNextHashParam(params.nameddest);
         this.navigateTo(params.nameddest);
         return;
       }
@@ -1154,7 +1143,6 @@ var PDFViewerApplication = {
     } else if (/^\d+$/.test(hash)) { // page number
       this.page = hash;
     } else { // named destination
-      PDFHistory.updateNextHashParam(unescape(hash));
       this.navigateTo(unescape(hash));
     }
   },
@@ -1755,9 +1743,6 @@ window.addEventListener('updateviewarea', function () {
   document.getElementById('viewBookmark').href = href;
   document.getElementById('secondaryViewBookmark').href = href;
 
-  // Update the current bookmark in the browsing history.
-  PDFHistory.updateCurrentBookmark(location.pdfOpenParams, location.pageNumber);
-
   // Show/hide the loading indicator in the page number input element.
   var pageNumberInput = document.getElementById('pageNumber');
   var currentPage =
@@ -1785,9 +1770,7 @@ window.addEventListener('resize', function webViewerResize(evt) {
 });
 
 window.addEventListener('hashchange', function webViewerHashchange(evt) {
-  if (PDFHistory.isHashChangeUnlocked) {
-    PDFViewerApplication.setHash(document.location.hash.substring(1));
-  }
+  PDFViewerApplication.setHash(document.location.hash.substring(1));
 });
 
 //#if !(FIREFOX || MOZCENTRAL || CHROME)
@@ -2192,13 +2175,11 @@ window.addEventListener('keydown', function keydown(evt) {
     switch (evt.keyCode) {
       case 37: // left arrow
         if (PresentationMode.active) {
-          PDFHistory.back();
           handled = true;
         }
         break;
       case 39: // right arrow
         if (PresentationMode.active) {
-          PDFHistory.forward();
           handled = true;
         }
         break;
