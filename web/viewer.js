@@ -102,6 +102,8 @@ var PDFViewerApplication = {
   pdfThumbnailViewer: null,
   /** @type {PDFRenderingQueue} */
   pdfRenderingQueue: null,
+  /** @type {PDFHistory} */
+  pdfHistory: null,
   pageRotation: 0,
   updateScaleControls: true,
   isInitialViewSet: false,
@@ -446,6 +448,11 @@ var PDFViewerApplication = {
     this.pdfThumbnailViewer.setDocument(null);
     this.pdfViewer.setDocument(null);
 
+    if (this.pdfHistory) {
+      this.pdfHistory.destroy();
+      this.pdfHistory = null;
+    }
+
     if (typeof PDFBug !== 'undefined') {
       PDFBug.cleanup();
     }
@@ -632,9 +639,15 @@ var PDFViewerApplication = {
         break;
 
       case 'GoBack':
+        if (this.pdfHistory) {
+          this.pdfHistory.back();
+        }
         break;
 
       case 'GoForward':
+        if (this.pdfHistory) {
+          this.pdfHistory.forward();
+        }
         break;
 
       case 'Find':
@@ -844,6 +857,7 @@ var PDFViewerApplication = {
       if (!PDFJS.disableHistory && !self.isViewerEmbedded) {
         // The browsing history is only enabled when the viewer is standalone,
         // i.e. not when it is embedded in a web page.
+        self.pdfHistory = new PDFHistory({ fingerprint: id });
       }
     });
 
@@ -1280,6 +1294,7 @@ var PDFViewerApplication = {
     if (!this.pdfHistory) {
       return;
     }
+    this.pdfHistory.push(url);
   },
 
   /**
@@ -2169,11 +2184,17 @@ window.addEventListener('keydown', function keydown(evt) {
     switch (evt.keyCode) {
       case 37: // left arrow
         if (PresentationMode.active) {
+          if (PDFViewerApplication.pdfHistory) {
+            PDFViewerApplication.pdfHistory.back();
+          }
           handled = true;
         }
         break;
       case 39: // right arrow
         if (PresentationMode.active) {
+          if (PDFViewerApplication.pdfHistory) {
+            PDFViewerApplication.pdfHistory.forward();
+          }
           handled = true;
         }
         break;
