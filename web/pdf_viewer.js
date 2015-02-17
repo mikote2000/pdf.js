@@ -758,6 +758,10 @@ var SimpleLinkService = (function SimpleLinkServiceClosure() {
      * @param {string} action
      */
     executeNamedAction: function (action) {},
+    /**
+     * @param {string} url
+     */
+    pushUrlToBrowserHistory: function (url) {}
   };
   return SimpleLinkService;
 })();

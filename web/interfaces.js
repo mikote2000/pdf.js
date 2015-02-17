@@ -51,6 +51,10 @@ IPDFLinkService.prototype = {
    * @param {string} action
    */
   executeNamedAction: function (action) {},
+  /**
+   * @param {string} url
+   */
+  pushUrlToBrowserHistory: function (url) {}
 };
 
 /**

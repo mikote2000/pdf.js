@@ -49,11 +49,15 @@ var PDFOutlineView = (function PDFOutlineViewClosure() {
     /**
      * @private
      */
-    _bindLink: function PDFOutlineView_bindLink(element, item) {
+    _bindLink: function PDFOutlineView_bindLink(element, dest) {
       var linkService = this.linkService;
-      element.href = linkService.getDestinationHash(item.dest);
-      element.onclick = function goToDestination(e) {
-        linkService.navigateTo(item.dest);
+      var url = linkService.getDestinationHash(dest);
+      element.href = url;
+      element.onclick = function pdfOutlineViewLinksOnclick() {
+        if (dest) {
+          linkService.pushUrlToBrowserHistory(url);
+          linkService.navigateTo(dest);
+        }
         return false;
       };
     },
@@ -75,7 +79,7 @@ var PDFOutlineView = (function PDFOutlineViewClosure() {
           var div = document.createElement('div');
           div.className = 'outlineItem';
           var element = document.createElement('a');
-          this._bindLink(element, item);
+          this._bindLink(element, item.dest);
           element.textContent = item.title;
           div.appendChild(element);
 

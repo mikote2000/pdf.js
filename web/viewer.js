@@ -1276,6 +1276,12 @@ var PDFViewerApplication = {
     this.pdfViewer.scrollPageIntoView(pageNumber);
   },
 
+  pushUrlToBrowserHistory: function pdfViewPushUrlToBrowserHistory(url) {
+    if (!this.pdfHistory) {
+      return;
+    }
+  },
+
   /**
    * This function flips the page in presentation mode if the user scrolls up
    * or down with large enough motion and prevents page flipping too often.

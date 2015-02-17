@@ -49,9 +49,11 @@ var AnnotationsLayerBuilder = (function AnnotationsLayerBuilderClosure() {
     setupAnnotations:
         function AnnotationsLayerBuilder_setupAnnotations(viewport) {
       function bindLink(link, dest) {
-        link.href = linkService.getDestinationHash(dest);
+        var url = linkService.getDestinationHash(dest);
+        link.href = url;
         link.onclick = function annotationsLayerBuilderLinksOnclick() {
           if (dest) {
+            linkService.pushUrlToBrowserHistory(url);
             linkService.navigateTo(dest);
           }
           return false;
