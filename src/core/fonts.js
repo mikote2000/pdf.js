@@ -3657,6 +3657,9 @@ var Font = (function FontClosure() {
           default:
             warn('Unknown/unsupported post table version ' + version);
             valid = false;
+            if (properties.defaultEncoding) {
+              glyphNames = properties.defaultEncoding;
+            }
             break;
         }
         properties.glyphNames = glyphNames;
