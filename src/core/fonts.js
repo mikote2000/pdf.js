@@ -3207,7 +3207,12 @@ var Font = (function FontClosure() {
           }
         }
 
-        if (!potentialTable) {
+        var cmapPosition;
+        if (potentialTable) {
+          cmapPosition = start + potentialTable.offset;
+          assert(font instanceof Stream, 'No property .end on \'font\'.');
+        }
+        if (!potentialTable || cmapPosition > font.end) {
           warn('Could not find a preferred cmap table.');
           return {
             platformId: -1,
@@ -3217,7 +3222,7 @@ var Font = (function FontClosure() {
           };
         }
 
-        font.pos = start + potentialTable.offset;
+        font.pos = cmapPosition;
         var format = font.getUint16();
         var length = font.getUint16();
         var language = font.getUint16();
