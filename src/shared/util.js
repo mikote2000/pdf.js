@@ -320,6 +320,43 @@ function shadow(obj, prop, value) {
 }
 PDFJS.shadow = shadow;
 
+var LinkTarget = PDFJS.LinkTarget = {
+  NONE: '', // Default value.
+  SELF: '_self',
+  BLANK: '_blank',
+  PARENT: '_parent',
+  TOP: '_top'
+};
+
+function isExternalLinkTargetSet() {
+  if (PDFJS.openExternalLinksInNewWindow) {
+    warn('PDFJS.openExternalLinksInNewWindow is deprecated, ' +
+         'use PDFJS.externalLinkTarget instead.');
+    if (!PDFJS.externalLinkTarget) {
+      PDFJS.externalLinkTarget = LinkTarget.BLANK;
+    }
+  }
+  var param = PDFJS.externalLinkTarget;
+  if (param === LinkTarget.NONE) {
+    return false;
+  }
+  if (param === LinkTarget.SELF ||
+      param === LinkTarget.BLANK ||
+      param === LinkTarget.PARENT ||
+      param === LinkTarget.TOP) {
+    return true;
+  }
+  warn('Invalid value for PDFJS.externalLinkTarget: ' + param);
+  return false;
+}
+
+Object.defineProperty(PDFJS, 'isExternalLinkTargetSet', {
+  configurable: true,
+  get: function PDFJS_isExternalLinkTargetSet() {
+    return shadow(PDFJS, 'isExternalLinkTargetSet', isExternalLinkTargetSet());
+  }
+});
+
 var PasswordResponses = PDFJS.PasswordResponses = {
   NEED_PASSWORD: 1,
   INCORRECT_PASSWORD: 2
