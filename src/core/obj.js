@@ -192,6 +192,10 @@ var Dict = (function DictClosure() {
       return all;
     },
 
+    getKeys: function Dict_getKeys() {
+      return Object.keys(this.map);
+    },
+
     set: function Dict_set(key, value) {
       this.map[key] = value;
     },
@@ -585,7 +589,7 @@ var Catalog = (function CatalogClosure() {
             var dict = a[0];
             var ref = a[1];
             return new Page(this.pdfManager, this.xref, pageIndex, dict, ref,
-                            this.fontCache);
+                            this.fontCache, this.toplevelPagesDict);
           }.bind(this)
         );
       }
