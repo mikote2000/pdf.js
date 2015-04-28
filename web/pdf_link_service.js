@@ -121,27 +121,8 @@ var PDFLinkService = (function () {
         return this.getAnchorUrl('#' + escape(dest));
       }
       if (dest instanceof Array) {
-        var destRef = dest[0]; // see navigateTo method for dest format
-        var pageNumber = destRef instanceof Object ?
-          this._pagesRefCache[destRef.num + ' ' + destRef.gen + ' R'] :
-          (destRef + 1);
-        if (pageNumber) {
-          var pdfOpenParams = this.getAnchorUrl('#page=' + pageNumber);
-          var destKind = dest[1];
-          if (typeof destKind === 'object' && 'name' in destKind &&
-              destKind.name === 'XYZ') {
-            var scale = (dest[4] || this.pdfViewer.currentScaleValue);
-            var scaleNumber = parseFloat(scale);
-            if (scaleNumber) {
-              scale = scaleNumber * 100;
-            }
-            pdfOpenParams += '&zoom=' + scale;
-            if (dest[2] || dest[3]) {
-              pdfOpenParams += ',' + (dest[2] || 0) + ',' + (dest[3] || 0);
-            }
-          }
-          return pdfOpenParams;
-        }
+        var str = JSON.stringify(dest);
+        return this.getAnchorUrl('#' + escape(str));
       }
       return '';
     },
@@ -201,7 +182,7 @@ var PDFLinkService = (function () {
                       zoomArgs.length > 1 ? (zoomArgs[1] | 0) : null];
             } else if (zoomArg === 'FitR') {
               if (zoomArgs.length !== 5) {
-                console.error('pdfViewSetHash: ' +
+                console.error('PDFLinkService_setHash: ' +
                               'Not enough parameters for \'FitR\'.');
               } else {
                 dest = [null, { name: zoomArg },
@@ -209,7 +190,7 @@ var PDFLinkService = (function () {
                         (zoomArgs[3] | 0), (zoomArgs[4] | 0)];
               }
             } else {
-              console.error('pdfViewSetHash: \'' + zoomArg +
+              console.error('PDFLinkService_setHash: \'' + zoomArg +
                             '\' is not a valid zoom value.');
             }
           }
@@ -230,8 +211,19 @@ var PDFLinkService = (function () {
         }
       } else if (/^\d+$/.test(hash)) { // page number
         this.page = hash;
-      } else { // named destination
-        this.navigateTo(unescape(hash));
+      } else { // Named (or explicit) destination.
+        var unescapedHash = unescape(hash), destination = unescapedHash;
+        try {
+          destination = JSON.parse(destination);
+        } catch (ex) { }
+
+        if (typeof destination === 'string' ||
+            (destination instanceof Array && destination.length >= 2)) {
+          this.navigateTo(destination);
+        } else {
+          console.error('PDFLinkService_setHash: \'' + unescapedHash +
+                        '\' is not a valid destination.');
+        }
       }
     },
 
