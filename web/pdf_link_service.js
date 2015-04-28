@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* globals PDFViewer, PDFHistory, Promise, parseQueryString */
+/* globals PDFViewer, Promise, parseQueryString */
 
 'use strict';
 
@@ -86,13 +86,6 @@ var PDFLinkService = (function () {
             pageNumber = self.pagesCount;
           }
           self.pdfViewer.scrollPageIntoView(pageNumber, dest);
-
-          // Update the browsing history.
-          self.pdfHistory.push({
-            dest: dest,
-            hash: destString,
-            page: pageNumber
-          });
         } else {
           self.pdfDocument.getPageIndex(destRef).then(function (pageIndex) {
             var pageNum = pageIndex + 1;
@@ -179,7 +172,6 @@ var PDFLinkService = (function () {
         var params = parseQueryString(hash);
         // borrowing syntax from "Parameters for Opening PDF Files"
         if ('nameddest' in params) {
-          this.pdfHistory.updateNextHashParam(params.nameddest);
           this.navigateTo(params.nameddest);
           return;
         }
@@ -239,7 +231,6 @@ var PDFLinkService = (function () {
       } else if (/^\d+$/.test(hash)) { // page number
         this.page = hash;
       } else { // named destination
-        this.pdfHistory.updateNextHashParam(unescape(hash));
         this.navigateTo(unescape(hash));
       }
     },

@@ -97,7 +97,6 @@ var mozL10n = document.mozL10n || document.webL10n;
 
 var PDFViewerApplication = {
   initialBookmark: document.location.hash.substring(1),
-  initialDestination: null,
   initialized: false,
   fellback: false,
   pdfDocument: null,
@@ -158,9 +157,7 @@ var PDFViewerApplication = {
 
     Preferences.initialize();
 
-    this.pdfHistory = new PDFHistory({
-      linkService: pdfLinkService
-    });
+    this.pdfHistory = new PDFHistory();
     pdfLinkService.setHistory(this.pdfHistory);
 
     this.findController = new PDFFindController({
@@ -784,12 +781,6 @@ var PDFViewerApplication = {
       if (!PDFJS.disableHistory && !self.isViewerEmbedded) {
         // The browsing history is only enabled when the viewer is standalone,
         // i.e. not when it is embedded in a web page.
-        if (!self.preferenceShowPreviousViewOnLoad && window.history.state) {
-          window.history.replaceState(null, '');
-        }
-        self.pdfHistory.initialize(self.documentFingerprint);
-        self.initialDestination = self.pdfHistory.initialDestination;
-        self.initialBookmark = self.pdfHistory.initialBookmark;
       }
 
       store.initializedPromise.then(function resolved() {
@@ -967,12 +958,8 @@ var PDFViewerApplication = {
     document.getElementById('pageNumber').value =
       this.pdfViewer.currentPageNumber = 1;
 
-    if (this.initialDestination) {
-      this.pdfLinkService.navigateTo(this.initialDestination);
-      this.initialDestination = null;
-    } else if (this.initialBookmark) {
+    if (this.initialBookmark) {
       this.pdfLinkService.setHash(this.initialBookmark);
-      this.pdfHistory.push({ hash: this.initialBookmark }, true);
       this.initialBookmark = null;
     } else if (storedHash) {
       this.pdfLinkService.setHash(storedHash);
@@ -1583,10 +1570,6 @@ window.addEventListener('updateviewarea', function () {
   document.getElementById('viewBookmark').href = href;
   document.getElementById('secondaryViewBookmark').href = href;
 
-  // Update the current bookmark in the browsing history.
-  PDFViewerApplication.pdfHistory.updateCurrentBookmark(location.pdfOpenParams,
-                                                        location.pageNumber);
-
   // Show/hide the loading indicator in the page number input element.
   var pageNumberInput = document.getElementById('pageNumber');
   var currentPage =
@@ -1615,16 +1598,14 @@ window.addEventListener('resize', function webViewerResize(evt) {
 });
 
 window.addEventListener('hashchange', function webViewerHashchange(evt) {
-  if (PDFViewerApplication.pdfHistory.isHashChangeUnlocked) {
-    var hash = document.location.hash.substring(1);
-    if (!hash) {
-      return;
-    }
-    if (!PDFViewerApplication.isInitialViewSet) {
-      PDFViewerApplication.initialBookmark = hash;
-    } else {
-      PDFViewerApplication.linkService.setHash(hash);
-    }
+  var hash = document.location.hash.substring(1);
+  if (!hash) {
+    return;
+  }
+  if (!PDFViewerApplication.isInitialViewSet) {
+    PDFViewerApplication.initialBookmark = hash;
+  } else {
+    PDFViewerApplication.linkService.setHash(hash);
   }
 });
 
