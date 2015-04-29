@@ -157,7 +157,9 @@ var PDFViewerApplication = {
 
     Preferences.initialize();
 
-    this.pdfHistory = new PDFHistory();
+    this.pdfHistory = new PDFHistory({
+      linkService: pdfLinkService
+    });
     pdfLinkService.setHistory(this.pdfHistory);
 
     this.findController = new PDFFindController({
@@ -781,6 +783,11 @@ var PDFViewerApplication = {
       if (!PDFJS.disableHistory && !self.isViewerEmbedded) {
         // The browsing history is only enabled when the viewer is standalone,
         // i.e. not when it is embedded in a web page.
+        var hash = self.pdfHistory.initialize(self.documentFingerprint,
+          self.preferenceShowPreviousViewOnLoad);
+        if (hash) {
+          self.initialBookmark = hash;
+        }
       }
 
       store.initializedPromise.then(function resolved() {

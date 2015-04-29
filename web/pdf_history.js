@@ -17,22 +17,75 @@
 
 'use strict';
 
+/**
+ * @typedef {Object} PDFHistoryOptions
+ * @property {IPDFLinkService} linkService - The navigation/linking service.
+ */
+
+/**
+ * @class
+ * @implements {IPDFHistory}
+ */
 var PDFHistory = (function PDFHistoryClosure() {
-  function PDFHistory() {
+  /**
+   * @contructs PDFHistory
+   * @param {PDFHistoryOptions} options
+   */
+  function PDFHistory(options) {
+    this.linkService = options.linkService;
+
+    this.initialized = false;
   }
 
-  PDFHistory.prototype = {
-    initialize: function PDFHistory_initialize() {
+  PDFHistory.prototype = /** @lends PDFHistory.prototype */ {
+    /**
+     * @param {string} fingerprint - The PDF document's unique fingerprint.
+     * @param {boolean} resetHistory - (optional) Reset the browsing history.
+     * @returns {string} The current history state hash value.
+     */
+    initialize: function PDFHistory_initialize(fingerprint, resetHistory) {
+      this.fingerprint = fingerprint;
+
+      this.initialized = true;
+
+      return '';
     },
 
-    push: function PDFHistory_push() {
+    /**
+     * @param {string} url
+     */
+    push: function PDFHistory_push(url) {
+      if (!this.initialized) {
+        return;
+      }
     },
 
+    /**
+     *
+     */
     back: function PDFHistory_back() {
+      if (!this.initialized) {
+        return;
+      }
     },
 
+    /**
+     *
+     */
     forward: function PDFHistory_forward() {
+      if (!this.initialized) {
+        return;
+      }
     },
+
+    /**
+     * @param {string} hash
+     * @param {boolean} forceReplace
+     * @private
+     */
+    _pushOrReplaceState: function PDFHistory_pushOrReplaceState(hash,
+                                                                forceReplace) {
+    }
   };
 
   return PDFHistory;

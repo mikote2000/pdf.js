@@ -611,6 +611,7 @@ var PDFViewer = (function pdfViewer() {
 
       var event = document.createEvent('UIEvents');
       event.initUIEvent('updateviewarea', true, true, window, 0);
+      event.location = this.location;
       this.container.dispatchEvent(event);
     },
 
